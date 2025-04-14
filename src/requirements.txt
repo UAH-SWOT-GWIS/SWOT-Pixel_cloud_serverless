@@ -4,3 +4,4 @@ boto3
 requests  # Will install the latest version
 tenacity
 uvicorn[standard]  # Required to run FastAPI with ASGI
+mangum

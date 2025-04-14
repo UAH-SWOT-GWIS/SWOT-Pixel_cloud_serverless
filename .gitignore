@@ -4,3 +4,6 @@ src/__pycache__/download.cpython-313.pyc
 src/utils/__pycache__/__init__.cpython-313.pyc
 src/utils/__pycache__/utils.cpython-313.pyc
 .env
+terraform/main.tf
+terraform/output.tf
+terraform/variables.tf
