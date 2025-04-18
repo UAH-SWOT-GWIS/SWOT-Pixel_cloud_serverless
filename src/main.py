@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from mangum import Mangum
@@ -21,10 +21,14 @@ async def root():
     return {"message": "Hello from SWOT"}
 
 @app.post("/download")
-async def download(short_name: str, 
+async def download(background_tasks: BackgroundTasks, short_name: str, 
     granules: list[str], date_range: list[str] | None = None, 
     bounding_box: list[float] | None = None, version: str | None = None):
 
-    response = await download_data(short_name, granules, date_range, bounding_box, version)
+    background_tasks.add_task( 
+        download_data,short_name, granules, date_range, bounding_box, version)
 
-    return JSONResponse(content = response)
+    return JSONResponse(content={
+        "message": "success", 
+        "status": "Downloading initiated", 
+    })

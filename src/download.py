@@ -25,7 +25,7 @@ multipolygon = [
 lons, lats = zip(*multipolygon[0][0])
 bbox = [min(lons), min(lats), max(lons), max(lats)]
 
-async def download_data(
+def download_data(
     short_name: str, granules: list[str] | None, date_range: list[str], 
     bounding_box: list[float] | None, version: str | None = None, 
 ):
@@ -43,7 +43,7 @@ async def download_data(
     pixc_result = []
 
     for granule in granules:
-        result = await callWithNonNoneArgs(ea.search_data,short_name = short_name, 
+        result = callWithNonNoneArgs(ea.search_data,short_name = short_name, 
                                         granule_name = '*'+granule+'*',
                                         temporal = tuple(date_range),
                                         bounding_box = tuple(bounding_box),
@@ -63,6 +63,7 @@ async def download_data(
         "message": "success", 
         "status": "No Granules to download"}
     response = []
+
     for pixc in pixc_result:
         for granule in pixc:
             if granule:

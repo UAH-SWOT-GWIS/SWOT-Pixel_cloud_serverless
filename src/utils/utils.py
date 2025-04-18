@@ -1,4 +1,4 @@
-async def callWithNonNoneArgs(f, *args, **kwargs):
+def callWithNonNoneArgs(f, *args, **kwargs):
     """
     Calls a function, passing through only those keyword arguments that are not None.
     """
