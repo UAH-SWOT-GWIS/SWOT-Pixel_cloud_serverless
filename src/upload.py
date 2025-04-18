@@ -1,7 +1,6 @@
 from datetime import datetime
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-import asyncio
 import boto3
 import requests
 
@@ -27,8 +26,6 @@ def upload_stream(download_urls, meta_data,stream_in_chunks = False):
         }
     
     s3_dir = f"{meta_data.get('pass', 'unknown')}/{meta_data.get('tile', 'unknown')}/{meta_data.get('date', 'unknown')}/"
-
-    loop = asyncio.get_running_loop()
     
     print(f"downloading urls {download_urls}")
 

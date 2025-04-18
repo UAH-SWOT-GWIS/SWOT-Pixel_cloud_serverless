@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from mangum import Mangum
 
-from src.download import download_data
+from download import download_data
 
 app = FastAPI()
 handler = Mangum(app)

@@ -1,8 +1,7 @@
 import earthaccess as ea
-import asyncio
 
-from src.upload import stream_to_s3
-from src.utils.utils import callWithNonNoneArgs
+from upload import stream_to_s3
+from utils.utils import callWithNonNoneArgs
 
 auth = ea.login(strategy="environment")
 

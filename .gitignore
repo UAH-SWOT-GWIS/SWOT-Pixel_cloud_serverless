@@ -4,6 +4,13 @@ src/__pycache__/download.cpython-313.pyc
 src/utils/__pycache__/__init__.cpython-313.pyc
 src/utils/__pycache__/utils.cpython-313.pyc
 .env
-terraform/main.tf
-terraform/output.tf
-terraform/variables.tf
+terraform/terraform.tfvars
+package
+swot-env
+venv
+lambda.zip
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.94.1/windows_amd64/
+build.py
+terraform/terraform.tfstate
