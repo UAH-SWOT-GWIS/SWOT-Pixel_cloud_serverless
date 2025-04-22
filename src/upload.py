@@ -1,20 +1,23 @@
 from datetime import datetime
-from tenacity import retry, stop_after_attempt, wait_exponential
+import traceback
 
 import boto3
-import requests
 
 from config import s3BucketName, aws_access_key_id, aws_secret_access_key
 
-s3 = boto3.client("s3",aws_access_key_id=aws_access_key_id, 
-                  aws_secret_access_key=aws_secret_access_key)
+s3 = boto3.client("s3")
 
-def upload_stream(download_urls, meta_data,stream_in_chunks = False):
+def upload_stream(download_urls, meta_data,stream_in_chunks = False,auth = None):
     if not download_urls:
         print(f"No download links found")
         return {
             "status": "failed",
             "message": "No download links found"}
+    elif not auth:
+        print(f"Invalid earthaccess")
+        return {
+            "status": "failed",
+            "message": "Invalid earthaccess"}
     
     elif stream_in_chunks:
         #implementation needed to download in chunks, if the file_size is large; Need to do it in multipart
@@ -42,8 +45,8 @@ def upload_stream(download_urls, meta_data,stream_in_chunks = False):
             s3_location = s3_dir + file_name
         
         try:
-            with fetch_file(url) as response:
-                s3.upload_fileobj(response, s3BucketName, s3_location)
+            response = fetch_file(url,auth)
+            s3.upload_fileobj(response.raw, s3BucketName, s3_location)
             
             print(f"Uploaded {file_name} to s3://{s3BucketName}/{s3_location}")
             res.append({
@@ -56,20 +59,24 @@ def upload_stream(download_urls, meta_data,stream_in_chunks = False):
 
         except Exception as e:
             print(f"Failed to upload {file_name}: {str(e)}")
+            traceback.print_exc()
+            # print(traceback.format_exc())
             res.append({
                 "status": "failed",
                 "message": f"Error uploading {file_name}: {str(e)}"
             })
+        finally:
+            response.close()
     return res
 
         
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2))
-def fetch_file(url):
-    response = requests.get(url, stream=True)
+def fetch_file(url, auth):
+    session = auth.get_session()
+    response = session.get(url, stream=True)
     response.raise_for_status()
-    return response.raw
+    return response
 
-def stream_to_s3(granule):
+def stream_to_s3(granule,auth):
     granule_umm = granule.get('umm', {})
     granule_ur = granule_umm.get('GranuleUR', '')
 
@@ -109,5 +116,5 @@ def stream_to_s3(granule):
         "urls": download_urls
     }
 
-    return upload_stream(download_urls, meta_data, stream_chunks)
+    return upload_stream(download_urls, meta_data, stream_chunks,auth)
     

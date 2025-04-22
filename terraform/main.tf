@@ -29,11 +29,11 @@ resource "aws_iam_role_policy_attachment" "lambda_full_access" {
   role       = aws_iam_role.lambda_s3_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
 }
+
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role   	= aws_iam_role.lambda_s3_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
-
 
 resource "aws_lambda_function" "fastapi" {
   function_name = "swot_pixel_cloud"
@@ -42,7 +42,15 @@ resource "aws_lambda_function" "fastapi" {
   handler       = "main.handler"
   runtime       = "python3.10"
   role          = aws_iam_role.lambda_s3_role.arn
-  timeout       = 900
+  timeout = 60
+  memory_size = 512
+  environment {
+    variables = {
+      EARTHDATA_USERNAME = var.earthdata_username
+      EARTHDATA_PASSWORD = var.earthdata_password
+      S3_BUCKET = var.s3_bucket
+    }
+  }
 }
 
 resource "aws_apigatewayv2_api" "http_api" {

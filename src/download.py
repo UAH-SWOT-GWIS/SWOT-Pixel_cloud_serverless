@@ -67,7 +67,7 @@ def download_data(
     for pixc in pixc_result:
         for granule in pixc:
             if granule:
-                res : list = stream_to_s3(granule)
+                res : list = stream_to_s3(granule,auth)
                 if res:
                     response.append(res)
     print(response)

@@ -6,6 +6,7 @@ mkdir -p package
 pip install -r src/requirements.txt -t package
 cp -r src/*.py package/
 cp -r src/utils package/
+# cp -r src/.env package/
 
 cd package
 zip -r ../lambda.zip .
