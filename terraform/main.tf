@@ -42,7 +42,7 @@ resource "aws_lambda_function" "fastapi" {
   handler       = "main.handler"
   runtime       = "python3.10"
   role          = aws_iam_role.lambda_s3_role.arn
-  timeout = 60
+  timeout = 900
   memory_size = 512
   environment {
     variables = {
